@@ -90,23 +90,16 @@ variables
   bombSite:B known as siteB
 have been declared
 match 1:0
-  round 1:0:win
-    buy gun1 for 2700
-    buy gun2 for 3100
-    kill player1 with gun1
-    kill player2 with gun2 headshot
-    round ended with T as Terrorists (2-0)
-  round 2:0:loss
+  round round player1.alive && player2.alive
     buy gun1 for 2700
     buy gun2 for 3100
     death player1 from gun1
     death player2 from gun2
-    round ended with CT as Counter-Terrorists (0-2)
 end match
 GG WP
 ```
 
-Neste exemplo, é definido um jogo de simulação de Counter-Strike. As variáveis declaradas são armas (AK-47 e M4A4), jogadores (John e Sarah), times (Terroristas e Contra-Terroristas) e locais de plantação de bomba (A e B). O jogo tem duas rodadas, em que as ações são registradas para cada uma das rodadas. Na primeira rodada, os Terroristas (T) vencem a rodada ao matar os dois jogadores adversários. Na segunda rodada, os Contra-Terroristas (CT) vencem a rodada ao matar os dois jogadores Terroristas.
+Neste exemplo, é definido um jogo de simulação de Counter-Strike. As variáveis declaradas são armas (AK-47 e M4A4), jogadores (John e Sarah), times (Terroristas e Contra-Terroristas) e locais de plantação de bomba (A e B). O jogo continua enquanto algum dos jogadores estiverem vivos, em que as ações são registradas para cada loop.
 
 ## Programa de avaliação de desempenho de jogadores
 
