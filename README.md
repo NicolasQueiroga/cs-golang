@@ -48,6 +48,8 @@ BLOCK = "{", { STATEMENT }, "}";
 
 BOOLEAN_EXPRESSION = IDENTIFIER, ("==", | "!=", | ">", | "<", | ">=", | "<="), IDENTIFIER;
 
+ARITHMETIC_EXPRESSION = EXPRESSION, ("+", | "-", | "*", | "/"), EXPRESSION;
+
 FUNCTION = "execute", IDENTIFIER, "with", [ ARGUMENT, { ",", ARGUMENT } ];
 
 ARGUMENT = IDENTIFIER | DIGIT | BOOLEAN;
