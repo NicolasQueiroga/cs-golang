@@ -1,21 +1,38 @@
 Let's get this done
-variables
+variables {
   weapon:AK-47 known as gun1,
   weapon:M4A4 known as gun2,
-  player:John known as player1,
-  player:Sarah known as player2,
-  team:T known as T,
-  team:CT known as CT,
-  bombSite:A known as siteA,
-  bombSite:B known as siteB
-have been declared
-match 1:0
-  round player1.alive && player2.alive,
-    plant default bomb at A
-    buy gun1 for 2700
-    buy gun2 for 3100
-    death player1 from gun1
+  playerID:John known as player1,
+  playerID:Sarah known as player2,
+  team:T known as imp,
+  team:CT known as furia,
+  bombSiteID:A known as siteA,
+  bombSiteID:B known as siteB
+}
+
+functions {
+  DoSomething(p) {
     defuse bomb at A with 11 seconds remaining
+  }
+}
+
+match 1:0 {
+  round player1.alive && player2.alive {
+    if player1.score > player2.score
+    {
+      execute DoSomething(player1),
+      execute DoSomething(player2)
+    },
+    else
+    {
+      execute DoSomething(player2),
+      execute DoSomething(player1)
+    },
+    buy gun1 for 2700,
+    buy gun2 for 3100,
+    death player1 from gun1,
+    defuse bomb at A with 11 seconds remaining,
     death player2 from gun2
-end match
+  }
+}
 GG WP

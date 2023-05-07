@@ -1,33 +1,32 @@
-from rply import ParserGenerator, Token
-from _ast import *
+import rply
+
+from rply import ParserGenerator
+from _lexer import Lexer
 
 
 class Parser:
     def __init__(self):
         self.pg = ParserGenerator(
+            # A list of all token names, accepted by the parser.
             [
                 "PROGRAM",
-                "BLOCK",
-                "FOR",
-                "FROM",
-                "POSITION",
                 "VARIABLES_DECLARATION",
+                "FUNCITONS_DECLARATION",
                 "LOOP",
-                "SECONDS_REMAINING",
-                "WITH",
                 "END_LOOP",
                 "ROUND",
                 "END_ROUND",
                 "BUY",
+                "ALIVE",
+                "SCORE",
                 "KILL",
-                "BOMB",
-                "AT",
                 "DEATH",
                 "PLANT",
                 "DEFUSE",
-                "THEN",
+                "IF",
                 "ELSE",
                 "EXECUTE",
+                "DOT",
                 "GG",
                 "EQ",
                 "NEQ",
@@ -35,10 +34,18 @@ class Parser:
                 "GTE",
                 "LT",
                 "LTE",
+                "AND",
+                "OR",
                 "KNOWN_AS",
                 "HAVE_BEEN_DECLARED",
                 "PRINT_INVENTORY",
                 "RELOAD",
+                "FOR",
+                "FROM",
+                "POSITION",
+                "AT",
+                "SECONDS_REMAINING",
+                "WITH",
                 "DATA_TYPE",
                 "TEAM_IDENTIFIER",
                 "WEAPON_IDENTIFIER",
@@ -54,77 +61,96 @@ class Parser:
                 "RPAREN",
                 "LBRACE",
                 "RBRACE",
-                "HEADSHOT",
-                "DEFAULT",
-                "SAFE",
-                "OPEN",
-                "HIDDEN",
                 "SECONDS",
                 "IDENTIFIER",
                 "DIGIT",
-            ],
-            precedence=[
-                ("left", ["THEN", "ELSE", "EXECUTE"]),
-                ("left", ["AND", "OR"]),
-                ("left", ["EQ", "NEQ", "GT", "GTE", "LT", "LTE"]),
-            ],
+            ]
         )
-        self.variables = {}
-    
-    def parse(self):
-        self._add_rules()
-        return self.pg.build()
-    
-    def _add_rules(self):
-        @self.pg.production('program : PROGRAM VARIABLES_DECLARATION BLOCK GG')
-        def program(p):
-            return ProgramNode(p[1], p[2])
-        
-        @self.pg.production('variables_declaration : VARIABLES_DECLARATION BLOCK HAVE_BEEN_DECLARED')
-        def variables_declaration(p):
-            return VariablesDeclarationNode(p[1])
-        
-        @self.pg.production('variable_declaration : DATA_TYPE COLON IDENTIFIER KNOWN_AS IDENTIFIER COMMA')
-        def variable_declaration(p):
-            # add variable to variables dictionary
-            self.variables[p[4].value] = p[2].value
-            return VariableNode(p[0], p[2], p[4])
-        
-        @self.pg.production('game_loop : LOOP DIGIT COLON DIGIT BLOCK END_LOOP')
-        def game_loop(p):
-            return GameLoopNode(p[1], p[3], p[4])
-        
-        @self.pg.production('loop : ROUND BLOCK COMMA BLOCK END_ROUND')
-        def loop(p):
-            return LoopNode(p[1], p[3])
-        
-        # statements can have multiple statements
-        @self.pg.production('statements : statement statements')
-        @self.pg.production('statements : statement')
-        def statements(p):
-            return StatementsNode(p)
-        
-        @self.pg.production('statement : BUY WEAPON_IDENTIFIER FOR DIGIT')
-        def buy(p):
-            return WeaponBuyNode(p[1], p[3])
-        
-        @self.pg.production('statement : KILL IDENTIFIER FROM WEAPON_IDENTIFIER')
-        def kill(p):
-            return KillNode(p[1], p[3])
-        
-        @self.pg.production('statement : DEATH IDENTIFIER FROM WEAPON_IDENTIFIER')
-        def death(p):
-            return DeathNode(p[1], p[3])
-        
-        @self.pg.production('statement : PLANT POSITION BOMB AT BOMB_SITE')
-        def plant(p):
-            return BombPlantNode(p[1], p[4])
-        
-        @self.pg.production('statement : DEFUSE BOMB AT BOMB_SITE WITH DIGIT SECONDS_REMAINING')
-        def defuse(p):
-            return BombDefuseNode(p[4], p[6])
 
-        # @self.pg.production('round_end : ROUND ENDED WITH TEAM_IDENTIFIER AS ROUND_WINNER LPAREN DIGIT MINUS DIGIT RPAREN')
-        # def round_end(p):
-        #     return RoundEndNode(p[3], p[5], p[7], p[9])
+    def parse(self):
+        @self.pg.production("program : PROGRAM variables_declaration functions_declaration game_loop GG")
+        @self.pg.production("program : PROGRAM variables_declaration game_loop GG")
+        @self.pg.production("program : PROGRAM GG")
+        def program(p):
+            return p
         
+        @self.pg.production("variables_declaration : VARIABLES_DECLARATION LBRACE variables RBRACE")
+        def variables_declaration(p):
+            return p
+        
+        @self.pg.production("variables : DATA_TYPE COLON IDENTIFIER KNOWN_AS IDENTIFIER COMMA variables")
+        @self.pg.production("variables : DATA_TYPE COLON IDENTIFIER KNOWN_AS IDENTIFIER")
+        @self.pg.production("variables : DATA_TYPE COLON TEAM_IDENTIFIER KNOWN_AS IDENTIFIER COMMA variables")
+        @self.pg.production("variables : DATA_TYPE COLON TEAM_IDENTIFIER KNOWN_AS IDENTIFIER")
+        @self.pg.production("variables : DATA_TYPE COLON WEAPON_IDENTIFIER KNOWN_AS IDENTIFIER COMMA variables")
+        @self.pg.production("variables : DATA_TYPE COLON WEAPON_IDENTIFIER KNOWN_AS IDENTIFIER")
+        @self.pg.production("variables : DATA_TYPE COLON BOMB_SITE KNOWN_AS IDENTIFIER COMMA variables")
+        @self.pg.production("variables : DATA_TYPE COLON BOMB_SITE KNOWN_AS IDENTIFIER")
+        def variables(p):
+            return p
+        
+        @self.pg.production("functions_declaration : FUNCITONS_DECLARATION LBRACE functions RBRACE")
+        def functions_declaration(p):
+            return p
+        
+        @self.pg.production("functions : IDENTIFIER LPAREN identifiers RPAREN LBRACE round_statements RBRACE COMMA functions")
+        @self.pg.production("functions : IDENTIFIER LPAREN identifiers RPAREN LBRACE round_statements RBRACE")
+        def functions(p):
+            return p
+        
+        @self.pg.production("identifiers : IDENTIFIER COMMA identifiers")
+        @self.pg.production("identifiers : IDENTIFIER")
+        def identifiers(p):
+            return p
+        
+        @self.pg.production("game_loop : LOOP DIGIT COLON DIGIT LBRACE loop RBRACE")
+        def game_loop(p):
+            return p
+        
+        @self.pg.production("loop : ROUND boolean_expression LBRACE round_statements RBRACE")
+        def loop(p):
+            return p
+        
+        @self.pg.production("boolean_expression : IDENTIFIER EQ IDENTIFIER")
+        @self.pg.production("boolean_expression : IDENTIFIER NEQ IDENTIFIER")
+        @self.pg.production("boolean_expression : IDENTIFIER GT IDENTIFIER")
+        @self.pg.production("boolean_expression : IDENTIFIER GTE IDENTIFIER")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT ALIVE AND boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT ALIVE OR boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE AND boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE OR boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE GT boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE GTE boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE LT boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE LTE boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE EQ boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE NEQ boolean_expression")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT SCORE")
+        @self.pg.production("boolean_expression : IDENTIFIER DOT ALIVE")
+        def boolean_expression(p):
+            return p
+        
+        @self.pg.production("round_statements : round_statement COMMA round_statements")
+        @self.pg.production("round_statements : round_statement")
+        def round_statements(p):
+            return p
+        
+        @self.pg.production("round_statement : IF boolean_expression LBRACE round_statements RBRACE COMMA ELSE LBRACE round_statements RBRACE COMMA round_statements")
+        @self.pg.production("round_statement : IF boolean_expression LBRACE round_statements RBRACE COMMA ELSE LBRACE round_statements RBRACE")
+        @self.pg.production("round_statement : IF boolean_expression LBRACE round_statements RBRACE COMMA round_statements")
+        @self.pg.production("round_statement : IF boolean_expression LBRACE round_statements RBRACE")
+        @self.pg.production("round_statement : EXECUTE IDENTIFIER LPAREN identifiers RPAREN")
+        @self.pg.production("round_statement : BUY IDENTIFIER FOR DIGIT")
+        @self.pg.production("round_statement : KILL IDENTIFIER FROM IDENTIFIER")
+        @self.pg.production("round_statement : DEATH IDENTIFIER FROM IDENTIFIER")
+        @self.pg.production("round_statement : PLANT POSITION IDENTIFIER AT IDENTIFIER")
+        @self.pg.production("round_statement : DEFUSE IDENTIFIER AT BOMB_SITE WITH DIGIT SECONDS_REMAINING")
+        def round_statement(p):
+            return p
+        
+        @self.pg.error
+        def error_handle(token):
+            raise ValueError(token)
+        
+    def get_parser(self):
+        return self.pg.build()

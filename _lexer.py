@@ -8,6 +8,7 @@ class Lexer:
     def _add_tokens(self):
         self.lg.add("PROGRAM", r"Let\'s\s+get\s+this\s+done")
         self.lg.add("VARIABLES_DECLARATION", r"variables")
+        self.lg.add("FUNCITONS_DECLARATION", r"functions")
         self.lg.add("LOOP", r"match")
         self.lg.add("END_LOOP", r"end\s+match")
         self.lg.add("ROUND", r"round")
@@ -17,10 +18,12 @@ class Lexer:
         self.lg.add("DEATH", r"death")
         self.lg.add("PLANT", r"plant")
         self.lg.add("DEFUSE", r"defuse")
-        self.lg.add("THEN", r"then")
+        self.lg.add("IF", r"if")
         self.lg.add("ELSE", r"else")
         self.lg.add("EXECUTE", r"execute")
         self.lg.add("GG", r"GG\s+WP")
+        self.lg.add("ALIVE", r"alive")
+        self.lg.add("SCORE", r"score")
 
         # Operadores
         self.lg.add("EQ", r"==")
@@ -45,7 +48,7 @@ class Lexer:
         self.lg.add("WITH", r"with")
 
         # Identificadores
-        self.lg.add("DATA_TYPE", r"(weapon|player|team)")
+        self.lg.add("DATA_TYPE", r"(weapon|playerID|team|bombSiteID)")
         self.lg.add("TEAM_IDENTIFIER", r"(T|CT)")
         self.lg.add(
             "WEAPON_IDENTIFIER",
@@ -68,11 +71,6 @@ class Lexer:
         self.lg.add("RPAREN", r"\)")
         self.lg.add("LBRACE", r"{")
         self.lg.add("RBRACE", r"}")
-        self.lg.add("HEADSHOT", r"headshot")
-        self.lg.add("DEFAULT", r"default")
-        self.lg.add("SAFE", r"safe")
-        self.lg.add("OPEN", r"open")
-        self.lg.add("HIDDEN", r"hidden")
         self.lg.add("SECONDS", r"seconds")
 
         # All
