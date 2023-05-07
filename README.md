@@ -9,7 +9,7 @@ Made by: Nicolas Maciel Queiroga
 ## To-Do List
 
 - [x]  Estruturar a linguagem segundo o padrão ********EBNF********
-- [ ]  Utilizar as ferramentas Flex e Bison (ou semelhantes) para realizar as etapas de Análise Léxica e Sintática
+- [x]  Utilizar as ferramentas Flex e Bison (ou semelhantes) para realizar as etapas de Análise Léxica e Sintática
 - [ ]  Utilizar a LLVM (ou semelhantes - incluindo o próprio compilador) para implementar a sua linguagem até a fase final de compilação. Não é preciso implementar um compilador novo
 - [ ]  Criar um exemplo de testes que demonstre as características da sua Linguagem
 - [ ]  Montar uma apresentação com slides apresentando sua linguagem (Motivação, Características, Curiosidades e Exemplos)
@@ -170,3 +170,15 @@ if gun3.ammo < 5 then
 Neste exemplo, além das declarações das variáveis **`player1`** e armas **`gun1`**, **`gun2`** e **`gun3`**, há a chamada da função **`printInventory()`**, que deve imprimir na tela as informações sobre o inventário do jogador.
 
 Por fim, há uma verificação do nível de munição de cada uma das armas. Caso alguma delas esteja abaixo do valor mínimo (30 balas para **`gun1`** e **`gun2`**, e 5 balas para **`gun3`**), o código executa a função **`reload()`** para recarregar a arma.
+
+
+## Análises Léxica e Sintática
+
+Para tokenizar o codigo de entrada, assim como realizar a análise sintática, foi utilizado a ferramenta `rply`
+
+Para checar a análise sintática basta executar os seguintes comandos:
+
+```bash
+pip instal -r requirements.txt
+python main.py
+```
