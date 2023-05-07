@@ -26,7 +26,9 @@ LOOP = "round", BOOLEAN_EXPRESSION, { ROUND_STATEMENT };
 
 ROUND_STATEMENT = ( WEAPON_BUY | KILL | DEATH | BOMB_PLANT | BOMB_DEFUSE | ROUND_END );
 
-VARIABLES_DECLARATION = "variables", { VARIABLES }, "have been declared";
+VARIABLES_DECLARATION = "variables", { VARIABLES };
+
+FUNCTIONS_DECLARATION = "functions", { FUNCTIONS };
 
 VARIABLES = DATA_TYPE, ":", IDENTIFIER, "known as", IDENTIFIER;
 
@@ -42,7 +44,7 @@ BOMB_DEFUSE = "defuse", [ "kit" ], "bomb", "at", BOMB_SITE, "with", DIGIT, "seco
 
 ROUND_END = "round", "ended", "with", TEAM_IDENTIFIER, "as", ROUND_WINNER, "(", DIGIT, "-", DIGIT, ")";
 
-CONDITIONAL = "if", BOOLEAN_EXPRESSION, "then", BLOCK, [ "else", BLOCK ];
+CONDITIONAL = "if", BOOLEAN_EXPRESSION, BLOCK, [ "else", BLOCK ];
 
 BLOCK = "{", { STATEMENT }, "}";
 
@@ -50,13 +52,15 @@ BOOLEAN_EXPRESSION = IDENTIFIER, ("==", | "!=", | ">", | "<", | ">=", | "<="), I
 
 ARITHMETIC_EXPRESSION = EXPRESSION, ("+", | "-", | "*", | "/"), EXPRESSION;
 
+FUNCTION = "IDENTIFIER, (ARGUMENTS) {ROUND STATEMENTS};"
+
 FUNCTION = "execute", IDENTIFIER, "with", [ ARGUMENT, { ",", ARGUMENT } ];
 
 ARGUMENT = IDENTIFIER | DIGIT | BOOLEAN;
 
 IDENTIFIER = LETTER, { LETTER | DIGIT | "_" };
 
-DATA_TYPE = ( "weapon" | "player" | "team" );
+DATA_TYPE = ( "weapon" | "playerID" | "team" | "bombSiteID" );
 
 TEAM_IDENTIFIER = ( "T" | "CT" );
 
