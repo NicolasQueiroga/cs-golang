@@ -162,3 +162,31 @@ Para checar a análise sintática basta executar os seguintes comandos:
 pip instal -r requirements.txt
 python main.py
 ```
+
+## Instruções Para Compilar o Compilador e Executar o Código Teste
+
+- Para executar o projeto, é necessário ter o `cmake` instalado.
+  - Para macOS, basta executar o seguinte comando:
+  ```bash
+  brew install cmake
+  ```
+  - Para Linux, basta executar o seguinte comando 
+  ```bash
+  sudo apt install cmake
+  ```
+
+- Dentro do diretorio do projeto `compilador`, basta seguir os seguintes passos:
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+  
+- Para remover os feedbacks que tanto o comando `cmake` quanto o comando `make` geram, basta executa-los do seguinte jeito:
+```bash
+cmake .. > /dev/null
+make > /dev/null
+cd ..
+./bin/main in/test.gg
+```
