@@ -1,38 +1,46 @@
-Let's get this done
-variables {
-  weapon:AK-47 known as gun1,
-  weapon:M4A4 known as gun2,
-  playerID:John known as player1,
-  playerID:Sarah known as player2,
-  team:T known as imp,
-  team:CT known as furia,
-  bombSiteID:A known as siteA,
-  bombSiteID:B known as siteB
+Lets_get_this_done
+
+gun1::weapon known_as "AK-47",
+gun2::weapon known_as "AWP",
+player1::playerID known_as "FalleN",
+player2::playerID known_as "coldzera",
+t1::team known_as "imp",
+t2::team known_as "fur",
+siteA::bombSiteID known_as "A",
+siteB::bombSiteID known_as "B",
+startRound::round known_as 1,
+maxRound::round known_as 16,
+cash::money known_as 800,
+
+function printVar(var::weapon) {
+  voip(var),
 }
 
-functions {
-  DoSomething(p) {
-    defuse bomb at A with 11 seconds remaining
-  }
-}
+function buyGun(player::playerID, gun::weapon) {
+  voip(player + " buys " + gun),
+},
 
-match 1:0 {
-  round player1.alive && player2.alive {
-    if player1.score > player2.score
-    {
-      execute DoSomething(player1),
-      execute DoSomething(player2)
-    },
-    else
-    {
-      execute DoSomething(player2),
-      execute DoSomething(player1)
-    },
-    buy gun1 for 2700,
-    buy gun2 for 3100,
-    death player1 from gun1,
-    defuse bomb at A with 11 seconds remaining,
-    death player2 from gun2
+function execAstralis(site::bombSiteID, player::playerID) {
+  voip("plant bomb at " + site + " and defend it with all players except " + player),
+},
+
+printVar(gun1),
+
+  
+currRound::round known_as startRound,
+round_loop (currRound <= maxRound) {
+  voip("Round " + currRound + " starts"),
+  buyGun(player1, gun1),
+  if (currRound == 2) {
+    execAstralis(siteA, player2),
   }
-}
-GG WP
+  else {
+    voip("Rush B, don't stop"),
+  },
+  currRound = currRound + 1,
+},
+
+
+
+
+GGWP

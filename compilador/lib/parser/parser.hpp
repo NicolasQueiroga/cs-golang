@@ -1,0 +1,19 @@
+#pragma once
+
+#include "tokenizer/tokenizer.hpp"
+#include "node/node.hpp"
+
+class Parser
+{
+public:
+    static Tokenizer tokenizer;
+
+    static Node *parseVariables();
+    static Node *parseBlock();
+    static Node *parseStatement();
+    static Node *parseRelExpr();
+    static Node *parseExpression();
+    static Node *parseTerm();
+    static Node *parseFactor();
+    static Node *run(std::string code);
+};
