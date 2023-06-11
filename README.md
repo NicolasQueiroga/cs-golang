@@ -10,57 +10,37 @@ Made by: Nicolas Maciel Queiroga
 
 - [x]  Estruturar a linguagem segundo o padrão ********EBNF********
 - [x]  Utilizar as ferramentas Flex e Bison (ou semelhantes) para realizar as etapas de Análise Léxica e Sintática
-- [ ]  Utilizar a LLVM (ou semelhantes - incluindo o próprio compilador) para implementar a sua linguagem até a fase final de compilação. Não é preciso implementar um compilador novo
-- [ ]  Criar um exemplo de testes que demonstre as características da sua Linguagem
-- [ ]  Montar uma apresentação com slides apresentando sua linguagem (Motivação, Características, Curiosidades e Exemplos)
-- [ ]  Colocar no Github
+- [x]  Utilizar a LLVM (ou semelhantes - incluindo o próprio compilador) para implementar a sua linguagem até a fase final de compilação. Não é preciso implementar um compilador novo
+- [x]  Criar um exemplo de testes que demonstre as características da sua Linguagem
+- [x]  Montar uma apresentação com slides apresentando sua linguagem (Motivação, Características, Curiosidades e Exemplos)
+- [x]  Colocar no Github
 
 # EBNF
 
 ```bash
-PROGRAM = "Let's get this done", VARIABLES_DECLARATION, GAME_LOOP, "GG WP";
-
-GAME_LOOP = "match", DIGIT, ":", DIGIT, { LOOP }, "end match";
+PROGRAM = "Lets_get_this_done", BLOCK, "GGWP";
 
 LOOP = "round", BOOLEAN_EXPRESSION, { ROUND_STATEMENT };
 
-ROUND_STATEMENT = ( WEAPON_BUY | KILL | DEATH | BOMB_PLANT | BOMB_DEFUSE | ROUND_END );
+ROUND_STATEMENT = ( FUNCTION_CALL | VARIABLES_DECLARATION | OPERATIONS );
 
-VARIABLES_DECLARATION = "variables", { VARIABLES };
+VARIABLES_DECLARATION = IDENTIFIER, ":", DATA_TYPE, "known_as", IDENTIFIER;
 
-FUNCTIONS_DECLARATION = "functions", { FUNCTIONS };
+FUNCTIONS_DECLARATION = "IDENTIFIER(ARGUMENTS) {ROUND_STATEMENTS};"
 
-VARIABLES = DATA_TYPE, ":", IDENTIFIER, "known as", IDENTIFIER;
+ARGUMENT = IDENTIFIER | DIGIT | BOOLEAN | ANY;
 
-WEAPON_BUY = "buy", WEAPON_IDENTIFIER, "for", DIGIT;
+CONDITIONAL = "if", "(" BOOLEAN_EXPRESSION, ")", "{", BLOCK, "},", [ "else", "{", BLOCK, "}," ];
 
-KILL = "kill", IDENTIFIER, "with", WEAPON_IDENTIFIER, [ "headshot" ];
-
-DEATH = "death", IDENTIFIER, "from", WEAPON_IDENTIFIER;
-
-BOMB_PLANT = "plant", [ "default" | "safe" | "open" | "hidden" ], "bomb", "at", BOMB_SITE;
-
-BOMB_DEFUSE = "defuse", [ "kit" ], "bomb", "at", BOMB_SITE, "with", DIGIT, "seconds remaining";
-
-ROUND_END = "round", "ended", "with", TEAM_IDENTIFIER, "as", ROUND_WINNER, "(", DIGIT, "-", DIGIT, ")";
-
-CONDITIONAL = "if", BOOLEAN_EXPRESSION, BLOCK, [ "else", BLOCK ];
-
-BLOCK = "{", { STATEMENT }, "}";
+BLOCK = "{", { STATEMENT, "," }, "}";
 
 BOOLEAN_EXPRESSION = IDENTIFIER, ("==", | "!=", | ">", | "<", | ">=", | "<="), IDENTIFIER;
 
 ARITHMETIC_EXPRESSION = EXPRESSION, ("+", | "-", | "*", | "/"), EXPRESSION;
 
-FUNCTION = "IDENTIFIER, (ARGUMENTS) {ROUND STATEMENTS};"
-
-FUNCTION = "execute", IDENTIFIER, "with", [ ARGUMENT, { ",", ARGUMENT } ];
-
-ARGUMENT = IDENTIFIER | DIGIT | BOOLEAN;
-
 IDENTIFIER = LETTER, { LETTER | DIGIT | "_" };
 
-DATA_TYPE = ( "weapon" | "playerID" | "team" | "bombSiteID" );
+DATA_TYPE = ( "weapon" | "playerID" | "team" | "bombSiteID" | "round" );
 
 TEAM_IDENTIFIER = ( "T" | "CT" );
 
@@ -70,7 +50,7 @@ BOMB_SITE = ( "A" | "B" );
 
 ROUND_WINNER = ( "Terrorists" | "Counter-Terrorists" | "Draw" );
 
-DIGIT = ( "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" );
+DIGIT | ROUND = ( "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" );
 
 LETTER = ( "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" );
 
@@ -82,93 +62,94 @@ ROUND_OUTCOME = ( "win" | "loss" | "draw" );
 ## Jogo de simulação de Counter-Strike
 
 ```bash
-Let's get this done
-variables
-  weapon:AK-47 known as gun1,
-  weapon:M4A4 known as gun2,
-  player:John known as player1,
-  player:Sarah known as player2,
-  team:T known as T,
-  team:CT known as CT,
-  bombSite:A known as siteA,
-  bombSite:B known as siteB
-have been declared
-match 1:0
-  round round player1.alive && player2.alive
-    buy gun1 for 2700
-    buy gun2 for 3100
-    death player1 from gun1
-    death player2 from gun2
-end match
-GG WP
+Lets_get_this_done
+
+gun1::weapon known_as "AK-47",
+gun2::weapon known_as "AWP",
+player1::playerID known_as "FalleN",
+player2::playerID known_as "coldzera",
+t1::team known_as "imp",
+t2::team known_as "fur",
+siteA::bombSiteID known_as "A",
+siteB::bombSiteID known_as "B",
+startRound::round known_as 1,
+maxRound::round known_as 16,
+cash::money known_as 800,
+
+function printVar(var::weapon) {
+  voip(var),
+}
+
+function buyGun(player::playerID, gun::weapon) {
+  voip(player + " buys " + gun),
+},
+
+function execAstralis(site::bombSiteID, player::playerID) {
+  voip("plant bomb at " + site + " and defend it with all players except " + player),
+},
+
+printVar(gun1),
+
+  
+currRound::round known_as startRound,
+round_loop (currRound <= maxRound) {
+  voip("Round " + currRound + " starts"),
+  buyGun(player1, gun1),
+  if (currRound == 2) {
+    execAstralis(siteA, player2),
+  }
+  else {
+    voip("Rush B, don't stop"),
+  },
+  currRound = currRound + 1,
+},
+
+
+
+
+GGWP
 ```
 
-Neste exemplo, é definido um jogo de simulação de Counter-Strike. As variáveis declaradas são armas (AK-47 e M4A4), jogadores (John e Sarah), times (Terroristas e Contra-Terroristas) e locais de plantação de bomba (A e B). O jogo continua enquanto algum dos jogadores estiverem vivos, em que as ações são registradas para cada loop.
+Esse código em pseudo linguagem CSGO é uma representação simplificada de um script de jogo que descreve uma estratégia para um time em uma partida de Counter-Strike: Global Offensive (CSGO). Vou explicar linha por linha:
 
-## Programa de avaliação de desempenho de jogadores
+1. Declaração das variáveis:
+   - gun1 é uma arma, especificamente uma AK-47.
+   - gun2 é outra arma, uma AWP.
+   - player1 é um jogador identificado como "FalleN".
+   - player2 é outro jogador identificado como "coldzera".
+   - t1 é uma equipe chamada "imp".
+   - t2 é outra equipe chamada "fur".
+   - siteA é um local de bomba identificado como "A".
+   - siteB é outro local de bomba identificado como "B".
+   - startRound é o número da rodada inicial, definido como 1.
+   - maxRound é o número máximo de rodadas, definido como 16.
+   - cash é o dinheiro inicial dos jogadores, definido como 800.
 
-```bash
-Let's get this done
-variables
-  player:Tom known as player1,
-  player:Bob known as player2,
-  player:Sue known as player3,
-  player:Jen known as player4
-have been declared
-if player1.score > player2.score then
-{
-  execute printScore(player1)
-  execute printScore(player2)
-}
-else
-{
-  execute printScore(player2)
-  execute printScore(player1)
-}
-if player3.kills > player4.kills then
-{
-  execute printKills(player3)
-  execute printKills(player4)
-}
-else
-{
-  execute printKills(player4)
-  execute printKills(player3)
-}
-```
+2. Declaração de uma função chamada "printVar" que recebe uma variável do tipo "weapon" (arma) e a imprime por meio de uma função fictícia chamada "voip".
 
-Neste exemplo, é definido um programa que avalia o desempenho de quatro jogadores (Tom, Bob, Sue e Jen). As variáveis declaradas são os quatro jogadores. O programa verifica o score de cada um dos dois primeiros jogadores e imprime o score do jogador com o score mais alto primeiro. Em seguida, verifica o número de kills de cada um dos dois últimos jogadores e imprime o número de kills do jogador com o número mais alto primeiro.
+3. Declaração de uma função chamada "buyGun" que recebe um jogador e uma arma como parâmetros. Essa função também usa a função fictícia "voip" para informar que o jogador comprou a arma.
 
-## Sistema de gerenciamento de armas de fogo
+4. Declaração de uma função chamada "execAstralis" que recebe um local de bomba e um jogador como parâmetros. Essa função usa a função fictícia "voip" para informar que o jogador deve plantar a bomba no local especificado e defender com todos os jogadores, exceto o jogador especificado.
 
-```bash
-Let's get this done
-variables
-  player:John known as player1,
-  weapon:AK-47 known as gun1,
-  weapon:M4A4 known as gun2,
-  weapon:AWP known as gun3
-have been declared
+5. Chamada da função "printVar" para imprimir a descrição da "gun1" (AK-47).
 
-execute printInventory()
+6. Início de um loop chamado "round_loop" que executa enquanto o número da rodada atual (currRound) for menor ou igual ao número máximo de rodadas (maxRound).
 
-if gun1.ammo < 30 then
-{
-  execute reload(gun1)
-}
-if gun2.ammo < 30 then
-{
-  execute reload(gun2)
-}
-if gun3.ammo < 5 then
-{
-  execute reload(gun3)
-}
-```
+7. Dentro do loop, a função "voip" é usada para informar que a rodada atual está começando.
 
-Neste exemplo, além das declarações das variáveis **`player1`** e armas **`gun1`**, **`gun2`** e **`gun3`**, há a chamada da função **`printInventory()`**, que deve imprimir na tela as informações sobre o inventário do jogador.
+8. Em seguida, a função "buyGun" é chamada para o "player1" comprar a "gun1" (AK-47).
 
-Por fim, há uma verificação do nível de munição de cada uma das armas. Caso alguma delas esteja abaixo do valor mínimo (30 balas para **`gun1`** e **`gun2`**, e 5 balas para **`gun3`**), o código executa a função **`reload()`** para recarregar a arma.
+9. É feita uma verificação para saber se a rodada atual é a segunda (currRound == 2). Se for, a função "execAstralis" é chamada para o "player2" plantar a bomba no local "siteA" e defender.
+
+10. Caso contrário, é usado a função "voip" para informar que o time deve fazer um rush no local "B" sem parar.
+
+11. Incremento do número da rodada atual (currRound = currRound + 1).
+
+12. Fim do loop "round_loop".
+
+13. A mensagem "GGWP" é exibida, indicando "good game, well played" (bom jogo, bem jogado) como uma mensagem final.
+
+Essa pseudo linguagem representa uma estratégia básica para um time no jogo CSGO, incluindo a compra de armas, plantio de bomba e ações específicas para rodadas específicas. É importante destacar que essa é apenas uma representação simplificada e fictícia, não um código real do jogo CSGO.
 
 
 ## Análises Léxica e Sintática
