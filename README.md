@@ -110,7 +110,7 @@ round_loop (currRound <= maxRound) {
 GGWP
 ```
 
-Esse código em pseudo linguagem CSGO é uma representação simplificada de um script de jogo que descreve uma estratégia para um time em uma partida de Counter-Strike: Global Offensive (CSGO). Vou explicar linha por linha:
+Esse código em CS:GOLang é uma representação simplificada de um script de jogo que descreve uma estratégia para um time em uma partida de Counter-Strike: Global Offensive (CSGO). Vou explicar linha por linha:
 
 1. Declaração das variáveis:
    - gun1 é uma arma, especificamente uma AK-47.
@@ -125,11 +125,11 @@ Esse código em pseudo linguagem CSGO é uma representação simplificada de um 
    - maxRound é o número máximo de rodadas, definido como 16.
    - cash é o dinheiro inicial dos jogadores, definido como 800.
 
-2. Declaração de uma função chamada "printVar" que recebe uma variável do tipo "weapon" (arma) e a imprime por meio de uma função fictícia chamada "voip".
+2. Declaração de uma função chamada "printVar" que recebe uma variável do tipo "weapon" (arma) e a imprime por meio de uma função chamada "voip".
 
-3. Declaração de uma função chamada "buyGun" que recebe um jogador e uma arma como parâmetros. Essa função também usa a função fictícia "voip" para informar que o jogador comprou a arma.
+3. Declaração de uma função chamada "buyGun" que recebe um jogador e uma arma como parâmetros. Essa função também usa a função "voip" para informar que o jogador comprou a arma.
 
-4. Declaração de uma função chamada "execAstralis" que recebe um local de bomba e um jogador como parâmetros. Essa função usa a função fictícia "voip" para informar que o jogador deve plantar a bomba no local especificado e defender com todos os jogadores, exceto o jogador especificado.
+4. Declaração de uma função chamada "execAstralis" que recebe um local de bomba e um jogador como parâmetros. Essa função usa a função "voip" para informar que o jogador deve plantar a bomba no local especificado e defender com todos os jogadores, exceto o jogador especificado.
 
 5. Chamada da função "printVar" para imprimir a descrição da "gun1" (AK-47).
 
@@ -149,7 +149,7 @@ Esse código em pseudo linguagem CSGO é uma representação simplificada de um 
 
 13. A mensagem "GGWP" é exibida, indicando "good game, well played" (bom jogo, bem jogado) como uma mensagem final.
 
-Essa pseudo linguagem representa uma estratégia básica para um time no jogo CSGO, incluindo a compra de armas, plantio de bomba e ações específicas para rodadas específicas. É importante destacar que essa é apenas uma representação simplificada e fictícia, não um código real do jogo CSGO.
+Essa linguagem representa uma estratégia básica para um time no jogo CSGO, incluindo a compra de armas, plantio de bomba e ações específicas para rodadas específicas. É importante destacar que essa é apenas uma representação simplificada do jogo.
 
 
 ## Análises Léxica e Sintática
